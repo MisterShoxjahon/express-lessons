@@ -1,20 +1,24 @@
 {
-  "name": "express-init-app",
-  "version": "1.0.0",
-  "description": "First serious project",
-  "keywords": [
-    "NodeJS",
-    "ExpressJS"
-  ],
-  "license": "ISC",
-  "author": "Shoxjahon Sobirjanov",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "express": "^5.2.1",
-    "uuid": "^13.0.0"
-  }
+	"name": "express-init-app",
+	"version": "1.0.0",
+	"description": "First serious project",
+	"keywords": [
+		"NodeJS",
+		"ExpressJS"
+	],
+	"license": "ISC",
+	"author": "Shoxjahon Sobirjanov",
+	"type": "module",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js",
+		"dev": "nodemon index.js"
+	},
+	"dependencies": {
+		"express": "^5.2.1",
+		"uuid": "^13.0.0"
+	},
+	"devDependencies": {
+		"nodemon": "^3.1.14"
+	}
 }
