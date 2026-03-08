@@ -1,26 +1,36 @@
-/// GET, POST, DELETE, PUT
-
 import express from 'express'
+import mongoose from 'mongoose'
+import { Post } from './models/post.model.js'
+import dotenv from 'dotenv'
+
+dotenv.config() // configuration
 
 const app = express()
-const PORT = 5173 // port
 
-app.use(express.json()) // it tells for our express project we are using json
+app.use(express.json())
 
-app.get('/', (req, res) => {
-	res.status(200).json({message: 'Hello Shox!'})
+app.get('/', async (req, res) => {
+	try {
+		const AllPosts = await Post.find()
+		res.status(200).json(AllPosts)
+	} catch (error) {
+		res.status(400).json(error)
+	}
 })
 
-// post - GET, POST, DELETE, PUT
-app.post('/', (req, res) => {
-	const {firstName, lastName} = req.body
-	const message = `His full name : ${firstName} ${lastName}`
-	res.send(message)
+app.post('/', async (req, res) => { 
+	try {
+		const {title, body} = req.body
+		const newPost = new Post({title, body})	
+		await newPost.save()
+		res.status(201).json(newPost)
+	} catch (error) {
+		res.status(400).json(error)
+	}
 })
 
 
-	// : “Accept any value here and call it id.”
-app.delete('/:id', (req, res) => { // Think of : as “this part will be filled later”.
+app.delete('/:id', (req, res) => {
 	const {id} = req.params
 	res.send(id)
 }) 
@@ -32,9 +42,15 @@ app.put('/:id', (req, res) => {
 	res.json({id, body})
 })
 
-app.listen(PORT, () => {
-	console.log(`Server is running on - http://localhost:${PORT}`);
-})
+const PORT = process.env.PORT || 5173
 
-// domain - port - endpoint
-// http://localhost:8080/api/v1/users
+const bootstrap = async () => {
+	try{
+		await mongoose.connect(process.env.DB_URL).then(() => console.log('DB connected successfully'))
+		app.listen(PORT, () => {console.log(`Server is running on - http://localhost:${PORT}`);})
+	}catch (error){
+		console.log(`Error connecting with DB: ${error}`)
+	}
+}
+
+bootstrap()
