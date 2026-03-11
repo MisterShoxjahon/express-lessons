@@ -1,3 +1,3 @@
 router - controls endpoints
-controllers - takes endpoints functions
-server - handles logical parts of the application
+controllers - takes endpoints functions, it's part where it connects the server to the client or database 
+server - handles logical and business parts of the application

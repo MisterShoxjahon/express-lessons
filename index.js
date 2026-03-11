@@ -1,48 +1,17 @@
 import express from 'express'
 import mongoose from 'mongoose'
-import { Post } from './models/post.model.js'
 import dotenv from 'dotenv'
-
-dotenv.config() // configuration
+import router from './routes/post.route.js'
+	
+dotenv.config()
 
 const app = express()
-
 app.use(express.json())
 
-app.get('/', async (req, res) => {
-	try {
-		const AllPosts = await Post.find()
-		res.status(200).json(AllPosts)
-	} catch (error) {
-		res.status(400).json(error)
-	}
-})
+// Routes
+app.use('/api/posts', router) // it means it works when endpoint is http://localhost:5173/api/posts
 
-app.post('/', async (req, res) => { 
-	try {
-		const {title, body} = req.body
-		const newPost = new Post({title, body})	
-		await newPost.save()
-		res.status(201).json(newPost)
-	} catch (error) {
-		res.status(400).json(error)
-	}
-})
-
-
-app.delete('/:id', (req, res) => {
-	const {id} = req.params
-	res.send(id)
-}) 
-
-app.put('/:id', (req, res) => {
-	const {id} = req.params
-	const body = req.body
-	
-	res.json({id, body})
-})
-
-const PORT = process.env.PORT || 5173
+const PORT = process.env.PORT || 8080
 
 const bootstrap = async () => {
 	try{
@@ -51,6 +20,6 @@ const bootstrap = async () => {
 	}catch (error){
 		console.log(`Error connecting with DB: ${error}`)
 	}
-}
+}	
 
 bootstrap()
