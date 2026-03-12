@@ -2,14 +2,18 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import router from './routes/post.route.js'
+import fileUpload from 'express-fileupload'
 	
 dotenv.config()
 
 const app = express()
+
 app.use(express.json())
+app.use('/static' ,express.static('static'))
+app.use(fileUpload({}))
 
 // Routes
-app.use('/api/posts', router) // it means it works when endpoint is http://localhost:5173/api/posts
+app.use('/api/posts', router)
 
 const PORT = process.env.PORT || 8080
 

@@ -1,10 +1,12 @@
 import { Post } from '../models/post.model.js'
+import FileService from './file.service.js'
 
 class PostService {
-	async create(post) {
-			const newPost = await Post.create(post)
-			return newPost
-	}
+	async create(post, picture) {
+	const fileName = await FileService.save(picture)
+	const newPost = await Post.create({...post, picture: fileName})
+	return newPost
+}
 
 	async getAll() {
 		const allPosts = await Post.find()
@@ -22,7 +24,7 @@ class PostService {
 		}
 		const isPost = await this.getOne(id)
 		
-		const editedPost = await Post.findByIdAndUpdate(id, post, {new: true}) // id - что редактируем, post - на что редактируем, {new: true} - возвращает обновленный пост
+		const editedPost = await Post.findByIdAndUpdate(id, post, {new: true})
 		return editedPost
 	}
 
