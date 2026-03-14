@@ -1,3 +1,5 @@
 router - controls endpoints
 controllers - takes endpoints functions, it's part where it connects the server to the client or database 
 server - handles logical and business parts of the application
+database - is where the data is stored
+middleware - is a function that is called before the endpoints are called, and before requests reached the server

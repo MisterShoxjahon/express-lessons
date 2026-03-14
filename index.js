@@ -3,13 +3,15 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import router from './routes/post.route.js'
 import fileUpload from 'express-fileupload'
+import requestTime from './middlewares/request.time.js'
 	
 dotenv.config()
 
 const app = express()
 
+app.use(requestTime) // middleware function that will be executed for every incoming request to the server. It adds a property requestTime to the req object, which contains the timestamp of when the request was received. After adding this property, it calls next() to pass control to the next middleware function in the stack. it should be placed before the routes that need to access the requestTime property, so that it is available when those routes are executed.
 app.use(express.json())
-app.use('/static' ,express.static('static'))
+app.use('/static', express.static('static'))
 app.use(fileUpload({}))
 
 // Routes

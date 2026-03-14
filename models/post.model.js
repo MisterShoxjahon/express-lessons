@@ -4,7 +4,7 @@ import { Schema, model } from 'mongoose';
 const postSchema = new Schema({
 	title: {
 		type: String,
-		required: true
+		required: true 
 	},
 	body: {
 		type: String,
@@ -14,6 +14,8 @@ const postSchema = new Schema({
 		type: String,
 		required: false
 	}
+}, {
+	timestamps: true
 });
 
 export const Post = model('Post', postSchema)
