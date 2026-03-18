@@ -1,4 +1,4 @@
-const requestTime = function(req, res, next) { // next is a callback function that we need to call to pass the control to the next middleware function in the stack
+const requestTime = function(req, res, next) {
 	req.requestTime = Date.now();
 	next()
 }		

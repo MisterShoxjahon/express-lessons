@@ -1,4 +1,4 @@
-import PostService from '../server/post.service.js'
+import PostService from '../service/post.service.js'
 
 const postService = new PostService()
 
@@ -50,4 +50,4 @@ class PostController {
 	}
 }
 
-export default PostController
+export default PostController;

@@ -3,3 +3,4 @@ controllers - takes endpoints functions, it's part where it connects the server 
 server - handles logical and business parts of the application
 database - is where the data is stored
 middleware - is a function that is called before the endpoints are called, and before requests reached the server
+bcrypt library - turns password in hash mode for better info security in case if hackers hack the web
