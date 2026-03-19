@@ -4,3 +4,7 @@ server - handles logical and business parts of the application
 database - is where the data is stored
 middleware - is a function that is called before the endpoints are called, and before requests reached the server
 bcrypt library - turns password in hash mode for better info security in case if hackers hack the web
+jwt - provides safe information exchanges between front-end and back-end
+jsonwebtoken library - allows working with jwt
+cookie-parser library - allows working with cookies
+there are 2 storages: localStorage(weaker one) and httpOnly cookie(saves in back-end)

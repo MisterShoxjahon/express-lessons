@@ -1,6 +1,4 @@
-import PostService from '../service/post.service.js'
-
-const postService = new PostService()
+import postService from '../service/post.service.js'
 
 class PostController {
 	async getAll(req, res) {

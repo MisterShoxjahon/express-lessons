@@ -5,12 +5,14 @@ import mongoose from 'mongoose'
 import requestTime from './middlewares/request.time.js'
 import authRouter from './routes/auth.route.js'
 import router from './routes/post.route.js'
+import cookieParser from 'cookie-parser'
 	
 dotenv.config()
 
 const app = express()
 
 app.use(requestTime)
+app.use(cookieParser({}))
 app.use(express.json())
 app.use('/static', express.static('static'))
 app.use(fileUpload({}))

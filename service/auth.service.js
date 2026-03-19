@@ -1,6 +1,7 @@
 import UserDto from '../dtos/user.dto.js'
 import User from '../models/user.model.js'
 import bcrypt from 'bcrypt'
+import tokenService from './token.service.js'
 
 class AuthService {
 	async register(email, password) {
@@ -14,11 +15,13 @@ class AuthService {
 		const user = await User.create({email, password: hashedPassword})
 		// email service 
 
-		// jwt generation
 		const userDto = new UserDto(user)
+		// jwt generation
+		const tokens = tokenService.generateTokens({...userDto})
 
 		// token
-		return {userDto} 
+		await tokenService.saveToken(userDto.id, tokens.refreshToken)
+		return { user: userDto, ...tokens} 
 	}
 
 	async activation(userId) {
@@ -32,4 +35,4 @@ class AuthService {
 	}
 }
 
-export default AuthService
+export default new AuthService()

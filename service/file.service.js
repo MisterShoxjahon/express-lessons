@@ -30,4 +30,4 @@ class FileService {
 	delete() {}
 }
 
-export default FileService
+export default new FileService()
