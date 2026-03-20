@@ -2,6 +2,7 @@ import UserDto from '../dtos/user.dto.js'
 import User from '../models/user.model.js'
 import bcrypt from 'bcrypt'
 import tokenService from './token.service.js'
+import mailService from './mail.service.js'
 
 class AuthService {
 	async register(email, password) {
@@ -13,9 +14,10 @@ class AuthService {
 
 		const hashedPassword = await bcrypt.hash(password, 10)
 		const user = await User.create({email, password: hashedPassword})
-		// email service 
-
 		const userDto = new UserDto(user)
+		// email service 
+		await mailService.sendMail(email, `${process.env.API_URL}/api/auth/activation/${userDto.id}`)
+
 		// jwt generation
 		const tokens = tokenService.generateTokens({...userDto})
 

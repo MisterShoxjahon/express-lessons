@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+import 'dotenv/config'
 import express from 'express'
 import fileUpload from 'express-fileupload'
 import mongoose from 'mongoose'
@@ -7,8 +7,6 @@ import authRouter from './routes/auth.route.js'
 import router from './routes/post.route.js'
 import cookieParser from 'cookie-parser'
 	
-dotenv.config()
-
 const app = express()
 
 app.use(requestTime)

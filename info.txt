@@ -8,3 +8,4 @@ jwt - provides safe information exchanges between front-end and back-end
 jsonwebtoken library - allows working with jwt
 cookie-parser library - allows working with cookies
 there are 2 storages: localStorage(weaker one) and httpOnly cookie(saves in back-end)
+SMTP - Simple map transfer protokol - it's protokol of sending emails on server
