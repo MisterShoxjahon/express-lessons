@@ -8,8 +8,11 @@ const __dirname = path.dirname(__filename)
 
 class FileService {
 
-	static async save(file) {
+	async save(file) {
 		try {
+			if(!file) {
+				throw new Error('File is required')
+			}
 			const fileExt = file.name.split('.').pop()
 			const fileName = v4() + '.' + fileExt
 			const staticDir = path.join(__dirname, '..', 'static')

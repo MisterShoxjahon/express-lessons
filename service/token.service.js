@@ -15,8 +15,32 @@ class tokenService {
 			const existingToken = await tokenModel.create({user: userId, refreshToken})
 			return existingToken
 		}
-		existingToken.refreshToken = refreshToken // we are updating the token in tokenModel to the new one 
+		existingToken.refreshToken = refreshToken
 		return existingToken.save()
+	}
+
+	async removeToken(refreshToken) {
+		return await tokenModel.findOneAndDelete({refreshToken})
+	}
+
+	async findToken(refreshToken) {
+		return await tokenModel.findOne({refreshToken})
+	}
+
+	validateRefreshToken(token) {
+		try {
+			return jwt.verify(token, process.env.JWT_REFRESH_SECRET_KEY)
+		} catch (error) {
+			return null
+		}
+	}
+
+	validateAccessToken(token) {
+		try {
+			return jwt.verify(token, process.env.JWT_ACCESS_SECRET_KEY)
+		} catch (error) {
+			return null
+		}
 	}
 }
 
