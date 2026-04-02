@@ -9,3 +9,5 @@ jsonwebtoken library - allows working with jwt
 cookie-parser library - allows working with cookies
 there are 2 storages: localStorage(weaker one) and httpOnly cookie(saves in back-end)
 SMTP - Simple map transfer protokol - it's protokol of sending emails on server
+express-validator library - checks if we really wrote password after email
+cors library - access between front-end and back-end

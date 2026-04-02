@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import tokenModel from '../models/token.model.js'
 
 class tokenService {
-	generateTokens(payload) { // payload - the info we want to save and to be hidden in the token
+	generateTokens(payload) {
 		const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET_KEY, {expiresIn: "15m"})
 		const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET_KEY, {expiresIn: "30d"})
 
@@ -37,7 +37,7 @@ class tokenService {
 
 	validateAccessToken(token) {
 		try {
-			return jwt.verify(token, process.env.JWT_ACCESS_SECRET_KEY)
+			return jwt.verify(token, process.env.JWT_ACCESS_SECRET_KEY) // Check if this token is valid using my secret, and if yes — give me the user data inside it 	
 		} catch (error) {
 			return null
 		}

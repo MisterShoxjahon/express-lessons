@@ -4,56 +4,62 @@ import bcrypt from 'bcrypt'
 import tokenService from './token.service.js'
 import mailService from './mail.service.js'
 import userModel from '../models/user.model.js'
+import BaseError from '../errors/base.error.js'
 
 class AuthService {
 	async register(email, password) {
-		const existingUser = await User.findOne({email})
+		const existingUser = await User.findOne({ email })
 
-		if(existingUser) {
-			throw new Error(`User with this email: ${email} already exists`)
+		if (existingUser) {
+			throw BaseError.BadRequest(
+				`User with this email: ${email} already exists`,
+			)
 		}
 
 		const hashedPassword = await bcrypt.hash(password, 10)
-		const user = await User.create({email, password: hashedPassword})
+		const user = await User.create({ email, password: hashedPassword })
 		const userDto = new UserDto(user)
-		// email service 
-		await mailService.sendMail(email, `${process.env.API_URL}/api/auth/activation/${userDto.id}`)
+		// email service
+		await mailService.sendMail(
+			email,
+			`${process.env.API_URL}/api/auth/activation/${userDto.id}`,
+		)
 
 		// jwt generation
-		const tokens = tokenService.generateTokens({...userDto})
+		const tokens = tokenService.generateTokens({ ...userDto })
 
 		// token
 		await tokenService.saveToken(userDto.id, tokens.refreshToken)
-		return { user: userDto, ...tokens} 
+		return { user: userDto, ...tokens }
 	}
 
 	async activation(userId) {
 		const user = await User.findById(userId)
-		if(!user) {
-			throw new Error('User not found')
+		if (!user) {
+			throw BaseError.BadRequest('User not found')
 		}
 
 		user.isActivated = true
-		await user.save() 
+		await user.save()
 	}
 
 	async login(email, password) {
-		const user = await userModel.findOne({email})
-		if(!user) {
-			throw new Error('User is not defined')
+		const user = await userModel.findOne({ email })
+		if (!user) {
+			throw BaseError.BadRequest('User is not defined')
 		}
 
-		const isPassword = await bcrypt.compare(password, user.password) // it compares password to user's hashed password in it's own way.
-		if(!isPassword) {
-			throw new Error('The password is incorrect!')
+		const isPassword = await bcrypt.compare(password, user.password)
+		if (!isPassword) {
+			throw BaseError.BadRequest('The password is incorrect!')
 		}
 
 		const userDto = new UserDto(user)
 
-		const tokens = tokenService.generateTokens({...userDto})
+		const tokens = tokenService.generateTokens({ ...userDto })
 
 		await tokenService.saveToken(userDto.id, tokens.refreshToken)
-		return { user: userDto, ...tokens} 
+		return { user: userDto, ...tokens }
 	}
 
 	async logout(refreshToken) {
@@ -61,35 +67,35 @@ class AuthService {
 	}
 
 	async refresh(refreshToken) {
-	console.log('TOKEN:', refreshToken)
+		if (!refreshToken) {
+			throw BaseError.UnAuthorizedError('No token provided')
+		}
 
-	if (!refreshToken) {
-		throw new Error('No token provided')
+		const userPayload = tokenService.validateRefreshToken(refreshToken)
+
+		const tokenDb = await tokenService.findToken(refreshToken)
+
+		if (!userPayload) {
+			throw BaseError.UnAuthorizedError('Invalid token')
+		}
+
+		if (!tokenDb) {
+			throw BaseError.UnAuthorizedError('Token not found in DB')
+		}
+
+		const user = await User.findById(userPayload.id)	
+		const userDto = new UserDto(user)
+
+		const tokens = tokenService.generateTokens({ ...userDto })
+
+		await tokenService.saveToken(userDto.id, tokens.refreshToken)
+
+		return { user: userDto, ...tokens }
 	}
 
-	const userPayload = tokenService.validateRefreshToken(refreshToken)
-	console.log('PAYLOAD:', userPayload)
-
-	const tokenDb = await tokenService.findToken(refreshToken)
-	console.log('DB TOKEN:', tokenDb)
-
-	if (!userPayload) {
-		throw new Error('Invalid token')
+	async getUsers() {
+		return await userModel.find()
 	}
-
-	if (!tokenDb) {
-		throw new Error('Token not found in DB')
-	}
-
-	const user = await User.findById(userPayload.id)
-	const userDto = new UserDto(user)
-
-	const tokens = tokenService.generateTokens({ ...userDto })
-
-	await tokenService.saveToken(userDto.id, tokens.refreshToken)
-
-	return { user: userDto, ...tokens }
-}
 }
 
 export default new AuthService()

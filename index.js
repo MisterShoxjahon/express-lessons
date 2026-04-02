@@ -2,14 +2,15 @@ import 'dotenv/config'
 import express from 'express'
 import fileUpload from 'express-fileupload'
 import mongoose from 'mongoose'
-import requestTime from './middlewares/request.time.js'
 import authRouter from './routes/auth.route.js'
 import router from './routes/post.route.js'
 import cookieParser from 'cookie-parser'
+import { ErrorMiddleWare } from './middlewares/error.middleware.js'
+import cors from 'cors'
 	
 const app = express()
 
-app.use(requestTime)
+app.use(cors())
 app.use(cookieParser({}))
 app.use(express.json())
 app.use('/static', express.static('static'))
@@ -18,6 +19,9 @@ app.use(fileUpload({}))
 // Routes
 app.use('/api/posts', router)
 app.use('/api/auth', authRouter)
+
+// Middlewares
+app.use(ErrorMiddleWare)
 
 const PORT = process.env.PORT || 8080
 
